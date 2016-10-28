@@ -1,6 +1,5 @@
 import heapq
 
-
 class Cell(object):
     def __init__(self, x, y, reachable):
         """Initialize new cell.
@@ -21,16 +20,15 @@ class Cell(object):
         self.h = 0
         self.f = 0
 
-
 class AStar(object):
     def __init__(self):
         # open list
-        self.opened = []
+        self.opened = [] #list of processed opened cells
         heapq.heapify(self.opened)
         # visited cells list
-        self.closed = set()
+        self.closed = set() #closed cells
         # grid cells
-        self.cells = []
+        self.cells = [] #list of all cells
         self.grid_height = None
         self.grid_width = None
 
@@ -101,7 +99,7 @@ class AStar(object):
 
         path.append((self.start.x, self.start.y))
         path.reverse()
-        return path
+        return len(path)
 
     def update_cell(self, adj, cell):
         """Update adjacent cell.
@@ -143,3 +141,51 @@ class AStar(object):
                         self.update_cell(adj_cell, cell)
                         # add adj cell to open list
                         heapq.heappush(self.opened, (adj_cell.f, adj_cell))
+
+def findwalls(map):
+    walls = []
+    width = len(map[0])
+    height = len(map)
+
+    for x in range(0,len(map)):
+        for y in range(0,len(map[x])):
+            if map[x][y] == 1:
+                wall = (y,x)
+                walls.append(wall)
+    return (width, height, walls)
+
+def bruteforcewalls(m):
+    pathlens = []
+    maze = AStar()
+    i = 0
+    walls = findwalls(m)
+    editted_walls = list(walls[2])
+    maze.init_grid(walls[0], walls[1], walls[2], (0,0), (walls[0]-1,walls[1]-1))
+    print(maze.solve())
+
+    while i < len(walls[2]):
+        maze = AStar()
+        # print(i)
+        editted_walls = list(walls[2])
+        editted_walls.pop(i)
+        i += 1
+        maze.init_grid(walls[0], walls[1], editted_walls, (0,0), (walls[0]-1,walls[1]-1))
+        z = maze.solve()
+        print z
+        if z != None:
+            pathlens.append(z)
+
+    return (min(pathlens))
+
+def answer(maze):
+    return bruteforcewalls(maze)
+
+m = [
+[0, 1, 1, 0],
+[0, 0, 0, 1],
+[1, 1, 1, 0],
+[1, 1, 1, 0]
+]
+
+print(answer(m))
+
