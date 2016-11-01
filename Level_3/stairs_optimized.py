@@ -10,7 +10,7 @@ sample = [1, 1, 1, 2, 2, 3, 4, 5]
 
 def q(n):
 
-	if(n < len(sample)):
+	if (n < len(sample)):
 
 		# print(n,sample[n])
 		return sample[n]
@@ -20,9 +20,6 @@ def q(n):
 	s = 0
 
 	for k in range(1, top + 1):
-		# print(str(n) + ' - ' + str(k ** 2))
-
-		# print(2 * ((-1) ** (k + 1)) * q(n-k ** 2))
 
 		s = s + (2 * ((-1) ** (k + 1)) * q(n - k ** 2))
 
@@ -36,8 +33,7 @@ def answer(n):
 
 	for x in range(len(sample), n + 1):
 		l = q(x)
-		sig = sigma(x)
-		# print('appended',l + sig,'to',x)
+
 		sample.append(l)
 	return sample[len(sample)-1]-1
 
@@ -50,11 +46,4 @@ def sigma(n):
 	return 0
 
 
-print(answer(30))
-
-
-# for x in range (0, len(verify)):
-#   if(verify[x] == answer(x)):
-#       print True
-#   else:
-#       print False
+print(answer(1000))

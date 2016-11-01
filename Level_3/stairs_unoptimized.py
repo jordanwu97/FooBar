@@ -32,4 +32,4 @@ def q(n):
 	return s + sigma(n)
 
 
-print(q(30))
+print(q(50))

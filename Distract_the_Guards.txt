@@ -35,3 +35,13 @@ Inputs:
     (int list) banana_list = [1, 7, 3, 21, 13, 19]
 Output:
     (int) 0
+
+
+Solution Ideas:
+difference between 2 numbers must be odd
+Pair matching : http://stackoverflow.com/questions/29564756/efficient-algorithm-for-finding-max-number-of-pairs
+
+https://en.wikipedia.org/wiki/Matching_%28graph_theory%29
+
+
+1) Find all edges
