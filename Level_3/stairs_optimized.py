@@ -46,4 +46,4 @@ def sigma(n):
 	return 0
 
 
-print(answer(1000))
+print(answer(200))
