@@ -15,7 +15,7 @@ def test(a,b):
 
 		if a == b:
 			# print('exit')
-			return (True,k)
+			return (True,k,(a,b))
 
 		if a > b:
 			l.add((a,b))
@@ -57,13 +57,14 @@ def verify():
 	t = open('trues', 'w')
 	f = open('falses', 'w')
 	n = False
-	for _ in range(0,1000):
+	for _ in range(0,100):
 		k = createrandpair()
 		# print(k)
 		a = test(k[0],k[1])
 		b = test2(k[0],k[1])
 
 		if not (a[0] == b):
+			print(a[1])
 			print('dif')
 		# else:
 		# 	print('good')
@@ -78,9 +79,11 @@ def verify():
 	t.close()
 	f.close()
 
-verify()
+# verify()
 
 k = createrandpair()
 
 # print(test(k[0],k[1]))
 # print(test2(k[0],k[1]))
+print(test(57,135))
+print(test2(57,135))
