@@ -7,7 +7,7 @@ def test(a,b):
 
 	while True:
 
-		print(a,b)
+		# print(a,b)
 
 		if (b,a) in l or (a,b) in l:
 			# print('did not exit')
@@ -30,11 +30,27 @@ def test(a,b):
 
 def test2(a,b):
 	k = (a,b)
+	t = a + b
+	t2 = t/2
+	while True:
+		if a < b:
+			if a > t2:
+				return False
+			elif a == t2:
+				return True
+			a = a*2
+
+		if b < a:
+			if b > t2:
+				return False
+			elif a == t2:
+				return True
+			b = b*2
 
 
 def createrandpair():
-	a = randint(0,4534)
-	b = randint(0,4583)
+	a = randint(0,453)
+	b = randint(0,458)
 	return (a,b)
 
 def verify():
@@ -45,16 +61,26 @@ def verify():
 		k = createrandpair()
 		# print(k)
 		a = test(k[0],k[1])
-		if(a[0]):
-			n = True;
-			print(a[1])
-			t.write(str(a[1])+"\n")
-		else:
-			f.write(str(a[1])+"\n")
-	print(n)
+		b = test2(k[0],k[1])
+
+		if not (a[0] == b):
+			print('dif')
+		# else:
+		# 	print('good')
+
+		# if(a[0]):
+		# 	n = True;
+		# 	print(a[1])
+		# 	t.write(str(a[1])+"\n")
+		# else:
+		# 	f.write(str(a[1])+"\n")
+	# print(n)
 	t.close()
 	f.close()
 
-# verify()
+verify()
 
-print(test(1343,2014))
+k = createrandpair()
+
+# print(test(k[0],k[1]))
+# print(test2(k[0],k[1]))
