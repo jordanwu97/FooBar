@@ -38,7 +38,8 @@ Output:
 
 
 Solution Ideas:
-difference between 2 numbers must be odd
+t/a must be in set of 2's powers
+
 Pair matching : http://stackoverflow.com/questions/29564756/efficient-algorithm-for-finding-max-number-of-pairs
 
 https://en.wikipedia.org/wiki/Matching_%28graph_theory%29

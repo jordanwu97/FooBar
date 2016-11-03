@@ -1,8 +1,15 @@
 from random import randint
+from fractions import Fraction as fr
 # import matplotlib.pyplot as plt
 
+s = set()
+y=1
 
-def test(a,b):
+for x in xrange(30):
+	y = y * 2
+	s.add(y)
+
+def test1(a,b):
 	k = (a,b)
 	l = set()
 
@@ -58,117 +65,71 @@ def test(a,b):
 			b -= a
 			a += a
 
-def test2(a,b):
-	k = (a,b)
-	t = a + b
-	if not t % 2 == 0:
+def check_if_int_div(a,b):
+	if (float(a)/float(b)).is_integer():
+		return int(float(a)/float(b))
+	else:
 		return False
 
-	else:
-		return True
-	# t2 = t/2
-	# while True:
-	# 	if a < b:
-	# 		if a > t2:
-	# 			return False
-	# 		elif a == t2:
-	# 			return True
-	# 		a = a*2
+def test2(a,b):
+	c = min(a,b)
+	t = a + b
 
-	# 	if b < a:
-	# 		if b > t2:
-	# 			return False
-	# 		elif a == t2:
-	# 			return True
-	# 		b = b*2
+	frac_t = fr(t,c).numerator
+
+	if t in s or frac_t in s:
+		return True
+	else:
+		return False
 
 
 def createrandpair():
-	a = randint(0,454)
-	b = randint(0,454)
-	return (1,b)
+	a = randint(1,2000)
+	b = randint(1,2000)
+	return a,b
 
-def verify():
+def generateList():
 	sx = []
 	sy = []
 	t = open('trues', 'w')
 	f = open('falses', 'w')
 	n = False
-	# for gg in range(0,2000):
-	# 	k = createrandpair()
-	# 	# print(k)
-	# 	a = test(2,gg)
-	# 	# b = test2(k[0],k[1])
 
-	# 	# if not (a[0] == b):
-	# 	# 	print(a[1])
-	# 	# 	print('dif')
-	# 	# else:
-	# 	# 	print('good')
+	for i in range(0,10):
+		for j in range(0,2000):
+			k = createrandpair()
+			a = test(i,j)
 
-	# 	if(a[0]):
-	# 		n = True;
-	# 		s = a[1]
-	# 		sx.append(s[0])
-	# 		sy.append(s[1])
-	# 		print(a[1])
-	# 		t.write(str(a[1])+"\n")
-		# else:
-			# f.write(str(a[1])+"\n")
-	# print(n)
-	# for gg in range(0,2000):
-		# k = createrandpair()
-		# # print(k)
-		# a = test(1,gg)
-		# b = test2(k[0],k[1])
-
-		# if not (a[0] == b):
-		# 	print(a[1])
-		# 	print('dif')
-		# else:
-		# 	print('good')
-
-		# if(a[0]):
-		# 	n = True;
-		# 	s = a[1]
-		# 	sx.append(s[0])
-		# 	sy.append(s[1])
-		# 	print(s[1])
-		# 	t.write(str(a[1])+"\n")
-	for gg in range(0,5000):
-		k = createrandpair()
-		# print(k)
-		a = test(8,gg)
-		# b = test2(k[0],k[1])
-
-		# if not (a[0] == b):
-		# 	print(a[1])
-		# 	print('dif')
-		# else:
-		# 	print('good')
-
-		if(a[0]):
-			n = True;
-			s = a[1]
-			sx.append(s[0])
-			sy.append(s[1])
-			print(s[1])
-			t.write(str(a[1])+"\n")
-
-	plt.plot(sx,sy, "o")
-	axes = plt.gca()
-	axes.set_xlim([-1,3])
-	# axes.set_ylim([ymin,ymax])
-	plt.yscale('log')
-	plt.show()
+			if(a[0]):
+				n = True;
+				s = a[1]
+				sx.append(s[0])
+				sy.append(s[1])
+				print(s[1])
+				t.write(str(a[1])+"\n")
+			else:
+				f.write(str(a[1])+"\n")
 	t.close()
 	f.close()
 
-verify()
+def verification():
+	for i in range(0,100000):
+		r = createrandpair()
+		a = test1(r[0],r[1])
+		b = test2(r[0],r[1])
+		if not a[0] == b:
+			print r
+			print 'failed'
+	print 'all cases pass'
 
-k = createrandpair()
+verification()
 
-# print(test(k[0],k[1]))
-# print(test2(k[0],k[1]))
-print(test(3,765))
-# print(test2(57,135))
+# r = createrandpair()
+# print(r)
+# print(test2(r[0],r[1]))
+
+# print(test1(480,4640)[0])
+
+# print(checkintdiv(9+5,5))
+
+# print(fr(3040,855).numerator)
