@@ -1,5 +1,5 @@
 from random import randint
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 
 def test(a,b):
@@ -23,9 +23,9 @@ def test(a,b):
 				nl2.append(y[1])
 
 			# print (nl)
-			plt.plot(range(0,u),nl)
-			plt.plot(range(0,u),nl2)
-			plt.show()
+			# plt.plot(range(0,u),nl)
+			# plt.plot(range(0,u),nl2)
+			# plt.show()
 
 			return (False,k)
 
@@ -41,9 +41,9 @@ def test(a,b):
 				nl2.append(y[1])
 
 			# print (nl)
-			plt.plot(range(0,u),nl)
-			plt.plot(range(0,u),nl2)
-			plt.show()
+			# plt.plot(range(0,u),nl)
+			# plt.plot(range(0,u),nl2)
+			# plt.show()
 
 			return (True,k,(a,b))
 
@@ -86,39 +86,89 @@ def test2(a,b):
 def createrandpair():
 	a = randint(0,454)
 	b = randint(0,454)
-	return (a,b)
+	return (1,b)
 
 def verify():
+	sx = []
+	sy = []
 	t = open('trues', 'w')
 	f = open('falses', 'w')
 	n = False
-	for _ in range(0,100):
-		k = createrandpair()
-		# print(k)
-		a = test(k[0],k[1])
-		b = test2(k[0],k[1])
+	# for gg in range(0,2000):
+	# 	k = createrandpair()
+	# 	# print(k)
+	# 	a = test(2,gg)
+	# 	# b = test2(k[0],k[1])
 
-		if not (a[0] == b):
-			print(a[1])
-			print('dif')
+	# 	# if not (a[0] == b):
+	# 	# 	print(a[1])
+	# 	# 	print('dif')
+	# 	# else:
+	# 	# 	print('good')
+
+	# 	if(a[0]):
+	# 		n = True;
+	# 		s = a[1]
+	# 		sx.append(s[0])
+	# 		sy.append(s[1])
+	# 		print(a[1])
+	# 		t.write(str(a[1])+"\n")
+		# else:
+			# f.write(str(a[1])+"\n")
+	# print(n)
+	# for gg in range(0,2000):
+		# k = createrandpair()
+		# # print(k)
+		# a = test(1,gg)
+		# b = test2(k[0],k[1])
+
+		# if not (a[0] == b):
+		# 	print(a[1])
+		# 	print('dif')
 		# else:
 		# 	print('good')
 
 		# if(a[0]):
 		# 	n = True;
-		# 	print(a[1])
+		# 	s = a[1]
+		# 	sx.append(s[0])
+		# 	sy.append(s[1])
+		# 	print(s[1])
 		# 	t.write(str(a[1])+"\n")
+	for gg in range(0,5000):
+		k = createrandpair()
+		# print(k)
+		a = test(8,gg)
+		# b = test2(k[0],k[1])
+
+		# if not (a[0] == b):
+		# 	print(a[1])
+		# 	print('dif')
 		# else:
-		# 	f.write(str(a[1])+"\n")
-	# print(n)
+		# 	print('good')
+
+		if(a[0]):
+			n = True;
+			s = a[1]
+			sx.append(s[0])
+			sy.append(s[1])
+			print(s[1])
+			t.write(str(a[1])+"\n")
+
+	plt.plot(sx,sy, "o")
+	axes = plt.gca()
+	axes.set_xlim([-1,3])
+	# axes.set_ylim([ymin,ymax])
+	plt.yscale('log')
+	plt.show()
 	t.close()
 	f.close()
 
-# verify()
+verify()
 
 k = createrandpair()
 
 # print(test(k[0],k[1]))
 # print(test2(k[0],k[1]))
-print(test(57,135))
+print(test(3,765))
 # print(test2(57,135))
