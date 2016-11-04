@@ -2,7 +2,7 @@ from random import randint
 from fractions import Fraction as fr
 # import matplotlib.pyplot as plt
 
-s = set()
+s = set() #Set of 2^k where 0<k<31
 y=1
 
 for x in xrange(30):
@@ -10,6 +10,8 @@ for x in xrange(30):
 	s.add(y)
 
 def test1(a,b):
+#Original iterative algorithm. Does not actually achieve O(n). 
+#High memory usage and time complexity when given pairs with long loops
 	k = (a,b)
 	l = set()
 
@@ -65,13 +67,9 @@ def test1(a,b):
 			b -= a
 			a += a
 
-def check_if_int_div(a,b):
-	if (float(a)/float(b)).is_integer():
-		return int(float(a)/float(b))
-	else:
-		return False
 
 def test2(a,b):
+#O(1) algorithm. Created using OEIS, and logrithmic graphing
 	c = min(a,b)
 	t = a + b
 
@@ -83,12 +81,15 @@ def test2(a,b):
 		return False
 
 
-def createrandpair():
-	a = randint(1,2000)
-	b = randint(1,2000)
+def createrandpair(x):
+#Creates random tuple pair a,b for testing
+	a = randint(1,x)
+	b = randint(1,x)
 	return a,b
 
+
 def generateList():
+#Generates a list from O(n) algorithm for testing against faster O(1) algorithm
 	sx = []
 	sy = []
 	t = open('trues', 'w')
@@ -112,24 +113,31 @@ def generateList():
 	t.close()
 	f.close()
 
-def verification():
-	for i in range(0,100000):
-		r = createrandpair()
+
+def verification(x, randrange):
+#Verification loop over x amount of random points
+	for i in range(0,x):
+		r = createrandpair(randrange)
 		a = test1(r[0],r[1])
 		b = test2(r[0],r[1])
 		if not a[0] == b:
 			print r
 			print 'failed'
 	print 'all cases pass'
+def createEdges(l):
+#Creates graph G such that iter(G) contains vertices, G[v] contains vertices adjacent to v
+	graph = {} #empty graph
 
-verification()
+	f = open('test', 'w')
+	for x in xrange(len(l)):
+		adjacent_vertices = set() #empty set
+		for y in xrange(0,len(l)):
+			if not test2(l[x] , l[y]):
+				adjacent_vertices.add(l[y]) #add neighbor to set if fails test
 
-# r = createrandpair()
-# print(r)
-# print(test2(r[0],r[1]))
+		graph[l[x]] = adjacent_vertices #set of neighbors as dict[v]
 
-# print(test1(480,4640)[0])
+	return graph
 
-# print(checkintdiv(9+5,5))
-
-# print(fr(3040,855).numerator)
+# verification()
+print(createEdges([1, 7, 3, 21, 13, 19]))
