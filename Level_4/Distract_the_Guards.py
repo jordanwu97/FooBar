@@ -65,6 +65,12 @@ def test1(a,b):
 			b -= a
 			a += a
 
+def check_if_int_div(a,b):
+	if (float(a)/float(b)).is_integer():
+		return int(float(a)/float(b))
+	else:
+		return False
+
 def test2(a,b):
 	c = min(a,b)
 	t = a + b
@@ -72,13 +78,14 @@ def test2(a,b):
 	frac_t = fr(t,c).numerator
 
 	if t in s or frac_t in s:
-		return True, (a,b)
+		return True
 	else:
-		return False , (a,b)
+		return False
+
 
 def createrandpair():
-	a = randint(1,2**30)
-	b = randint(1,2**30)
+	a = randint(1,2000)
+	b = randint(1,2000)
 	return a,b
 
 def generateList():
@@ -106,7 +113,7 @@ def generateList():
 	f.close()
 
 def verification():
-	for i in range(0,100):
+	for i in range(0,100000):
 		r = createrandpair()
 		a = test1(r[0],r[1])
 		b = test2(r[0],r[1])
@@ -115,20 +122,14 @@ def verification():
 			print 'failed'
 	print 'all cases pass'
 
-# verification()
+verification()
 
-def createEdges(l):
-	e = []
-	f = open('test', 'w')
-	for x in xrange(len(l)):
-		for y in xrange(x+1,len(l)):
-			if not test2(l[x] , l[y])[0]:
-				e.append((l[x] , l[y]))
-				f.write(str(test2(l[x] , l[y])[1])+"\n")
-	return e
-	# print f
-
+# r = createrandpair()
 # print(r)
-# print(createEdges(range(1,50)))
-print(createEdges([1, 7, 3, 21, 13, 19]))
-# print(test2(1,4))
+# print(test2(r[0],r[1]))
+
+# print(test1(480,4640)[0])
+
+# print(checkintdiv(9+5,5))
+
+# print(fr(3040,855).numerator)
