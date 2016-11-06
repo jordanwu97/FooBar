@@ -69,20 +69,18 @@ def createrandpair(x):
 
 
 def generateList():
-#Generates a list from O(n) algorithm for testing against faster O(1) algorithm
+#Generates a list from test1 algorithm for finding patterns
 	t = open('trues', 'w')
-	f = open('false_pos', 'w')
 
-	for i in range(2000,4000):
-		for j in range(2000,4000):
+	for i in range(1,20):
+		for j in range(1,4000):
 			a = test1((i,j))
 
 			if a[0] == True :
 				# print a
-				f.write(str(a[1])+"\n")
+				t.write(str(a[1])+"\n")
 
 	t.close()
-	f.close()
 
 generateList()
 
@@ -93,20 +91,18 @@ def verification():
 	b = True
 	count = 0
 	false_pos = []
-	for i in xrange(2**18,2**18+1000):
-		for j in xrange(2**18,2**18+1000):
+	for i in xrange(1,20):
+		for j in xrange(1,2000):
 			r = (i,j)
+			a = test1(r)[0]
 			b = test2(r)
-			if b == True:
-				a = test1(r)[0]
-				if a != b:
-					count += 1
-					false_pos.append(r)
+			if not a == b:
+				print(a,b)
 
 	print false_pos
 
 
-# verification()
+verification()
 
 def createEdges(l):
 #Creates graph G such that iter(G) contains vertices, G[v] contains vertices adjacent to v

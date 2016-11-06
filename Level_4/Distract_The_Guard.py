@@ -1,8 +1,112 @@
-# Find maximum cardinality matching in general undirected graph
-# D. Eppstein, UC Irvine, 6 Sep 2003
-
 from __future__ import generators
 from fractions import Fraction as fr
+#PART 1
+#I FIRST CREATED A ITERATIVE FUNCTION TEST1 FOR FINDING TERMINATING PAIRS. IT WAS EXTREMELY INEFFICENT.
+#BY GENERATING A SMALL SEQEUENCE, I CREATED TEST2 WHICH ACHIEVES O(1)
+
+
+def createGraph(bananalist):
+
+    s = set() #Generate a set of 2^k's
+    y=1
+
+    for x in xrange(33):
+        y = y * 2
+        s.add(y)
+    
+    def test1(num):
+        #Original iterative algorithm. Does not actually achieve O(n). 
+        #High memory usage and time complexity when given pairs with long loops
+        a = num[0]
+        b = num[1]
+        l = set()
+        count = 0
+
+        while True:
+
+            count += 1
+
+            if a in l or b in l:
+                return False
+
+            if a == b:
+
+                return True
+
+            if a > b:
+                l.add(a)
+                a -= b
+                b += b
+            elif b > a:
+                l.add(a)
+                b -= a
+                a += a
+
+    def generateList():
+    #Generates a list from test1 algorithm for finding patterns
+        t = open('trues', 'w')
+
+        for i in range(1,20):
+            for j in range(1,4000):
+                a = test1((i,j))
+
+                if a[0] == True :
+                    # print a
+                    t.write(str(a[1])+"\n")
+
+        t.close()
+
+    def test2(num):
+    #O(1) algorithm. Created by plugging generated list into OEIS
+        c = min(num[0],num[1])
+        t = num[0]+num[1]
+    
+        frac_t = fr(t,c).numerator
+    
+        if t in s or frac_t in s: #SOMEHOW, TERMINATING PAIR'S SUM OR THEIR REDUCED FRACTION FALLS INTO THE SET OF 2^k
+            return True
+        else:
+            return False
+
+    def verification():
+    #Verification loop over x amount of random points
+        a = True
+        b = True
+        count = 0
+        false_pos = []
+        for i in xrange(1,20):
+            for j in xrange(1,2000):
+                r = (i,j)
+                a = test1(r)[0]
+                b = test2(r)
+                if not a == b:
+                    print(a,b)
+
+        print false_pos
+            
+    def createEdges(l):
+    #Creates graph G such that iter(G) contains vertices, G[v] contains vertices adjacent to v
+        graph = {} #empty graph
+
+        for x in xrange(len(l)):
+            adjacent_vertices = set() #empty set
+            for y in xrange(0,len(l)):
+                if not test2((l[x] , l[y])):
+                    adjacent_vertices.add(y) #add neighbor to set if fails test
+    
+            graph[x] = adjacent_vertices #set of neighbors as dict[v]
+    
+        return graph
+
+    Graph = createEdges(bananalist)
+    
+    return Graph
+
+#PART 2
+#FOR MAXIMUM MATCHING OF GRAPH GENERATED IN PART 1, I USED DR. DAVID EPPSTEIN'S IMPLEMENTATION OF EDMOND'S BLOSSOM ALGORITHM
+
+# Find maximum cardinality matching in general undirected graph
+# D. Eppstein, UC Irvine, 6 Sep 2003
 
 if 'True' not in globals():
     globals()['True'] = not None
@@ -248,72 +352,14 @@ Like augment(), returns true iff the matching size was increased.'''
 
     return matching
 
-s = set() #Set of 2^k where 0<k<31
-y=1
 
-for x in xrange(33):
-    y = y * 2
-    s.add(y)
+#END OF MAXIMUM MATCHING ALGORITHM
 
-def answer(bananalist):
-    
-    def test1(num):
-        #Original iterative algorithm. Does not actually achieve O(n). 
-        #High memory usage and time complexity when given pairs with long loops
-        a = num[0]
-        b = num[1]
-        l = set()
-        count = 0
 
-        while True:
-
-            count += 1
-
-            if a in l or b in l:
-                return False
-
-            if a == b:
-
-                return True
-
-            if a > b:
-                l.add(a)
-                a -= b
-                b += b
-            elif b > a:
-                l.add(a)
-                b -= a
-                a += a
-
-    def test2(num):
-    #O(1) algorithm. Created using OEIS, and logrithmic graphing
-        c = min(num[0],num[1])
-        t = num[0]+num[1]
-    
-        frac_t = fr(t,c).numerator
-    
-        if t in s or frac_t in s:
-            return True
-        else:
-            return False
-            
-    def createEdges(l):
-    #Creates graph G such that iter(G) contains vertices, G[v] contains vertices adjacent to v
-        graph = {} #empty graph
-
-        for x in xrange(len(l)):
-            adjacent_vertices = set() #empty set
-            for y in xrange(0,len(l)):
-                if not test2((l[x] , l[y])):
-                    adjacent_vertices.add(y) #add neighbor to set if fails test
-    
-            graph[x] = adjacent_vertices #set of neighbors as dict[v]
-    
-        return graph
-
-    Graph = createEdges(bananalist)
-
+def answer(bananalist): 
+    Graph = createGraph(bananalist)
     m = matching(Graph)
 
     return len(bananalist) - (len(m))
     
+print(answer([1,1]))
