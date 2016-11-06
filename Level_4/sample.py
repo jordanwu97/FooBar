@@ -2,6 +2,7 @@
 # D. Eppstein, UC Irvine, 6 Sep 2003
 
 from __future__ import generators
+from fractions import Fraction as fr
 
 if 'True' not in globals():
     globals()['True'] = not None
@@ -246,3 +247,73 @@ Like augment(), returns true iff the matching size was increased.'''
         pass
 
     return matching
+
+s = set() #Set of 2^k where 0<k<31
+y=1
+
+for x in xrange(33):
+    y = y * 2
+    s.add(y)
+
+def answer(bananalist):
+    
+    def test1(num):
+        #Original iterative algorithm. Does not actually achieve O(n). 
+        #High memory usage and time complexity when given pairs with long loops
+        a = num[0]
+        b = num[1]
+        l = set()
+        count = 0
+
+        while True:
+
+            count += 1
+
+            if a in l or b in l:
+                return False
+
+            if a == b:
+
+                return True
+
+            if a > b:
+                l.add(a)
+                a -= b
+                b += b
+            elif b > a:
+                l.add(a)
+                b -= a
+                a += a
+
+    def test2(num):
+    #O(1) algorithm. Created using OEIS, and logrithmic graphing
+        c = min(num[0],num[1])
+        t = num[0]+num[1]
+    
+        frac_t = fr(t,c).numerator
+    
+        if t in s or frac_t in s:
+            return True
+        else:
+            return False
+            
+    def createEdges(l):
+    #Creates graph G such that iter(G) contains vertices, G[v] contains vertices adjacent to v
+        graph = {} #empty graph
+
+        for x in xrange(len(l)):
+            adjacent_vertices = set() #empty set
+            for y in xrange(0,len(l)):
+                if not test2((l[x] , l[y])):
+                    adjacent_vertices.add(y) #add neighbor to set if fails test
+    
+            graph[x] = adjacent_vertices #set of neighbors as dict[v]
+    
+        return graph
+
+    Graph = createEdges(bananalist)
+
+    m = matching(Graph)
+
+    return len(bananalist) - (len(m))
+    
