@@ -1,3 +1,4 @@
+
 from __future__ import generators
 from fractions import Fraction as fr
 #PART 1
@@ -363,3 +364,4 @@ def answer(bananalist):
     return len(bananalist) - (len(m))
     
 print(answer([1,1]))
+print(answer(range(1, 100000000)))
