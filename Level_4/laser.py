@@ -1,4 +1,5 @@
 import math
+from decimal import Decimal
 
 def reflected(dim, shooter, target, distance):
 
@@ -61,10 +62,29 @@ def reflectedShooter(dim, shooter, distance):
 	slist = reflectedTargets(dim, shooter, shooter, distance)
 	return slist
 
-def compare(dim, shooter, target, distance):
+def answer(dim, shooter, target, distance):
 	tlist = reflectedTargets(dim, shooter, target, distance)
-	print tlist
+	target_map = unitVectorize(tlist,shooter)
+	# print target_map
+
 	slist = reflectedShooter(dim, shooter, distance)
+	shooter_map = unitVectorize(slist,shooter)
+	# print shooter_map
+
+	target_map_filtered = {}
+
+	for t in target_map:
+		if t in shooter_map: # if such vector is in shooter_map
+			if shooter_map[t] > target_map[t]: # if the distance in shooter map is greater than in target
+				target_map_filtered[t] = target_map[t] # means we will hit target before we hit shooter
+			else:
+				pass
+		else:
+			target_map_filtered[t] = target_map[t]
+	# print ""
+	# print target_map_filtered
+
+	return len(target_map_filtered)
 
 def inRange(shooter,target,distance):
 	d = (shooter[0] - target[0])**2 + (shooter[1] - target[1])**2
@@ -73,7 +93,36 @@ def inRange(shooter,target,distance):
 	else:
 		return False
 
-compare([4,4], [1,1], [2,2], 100)
+# unit vectorize each point:
+# store in map the vector with the shortest distance
+def unitVectorize(l,shooter):
+	nlist = [] # 
+	vector_map = {} # map the unit vector with the vector of shortest distance
+ 	for n in l:
+ 		ux = rounding((n[0]-shooter[0])/n[2])
+ 		uy = rounding((n[1]-shooter[1])/n[2])
+		nlist.append((ux,uy,n[2])) # tuple of (x/d, y/d, d)
+	
+	# print l
+	# print nlist
+
+	for m in nlist:
+		v = m[0], m[1]
+		if v not in vector_map:
+			vector_map[v] = m[2]
+		else:
+			if vector_map[v] > m[2]: # if the distance stored in vector map is greater than the current vector we are comparing
+				vector_map[v] = m[2]
+			else:
+				pass
+
+	# print vector_map
+	return vector_map
+
+def rounding(x):
+	return round(Decimal(x),14)
+
+print answer([3,3], [1,1], [2,2], 5)
 # print reflected( 5, 2 , 1, 12)
 
 
