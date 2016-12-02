@@ -3,7 +3,7 @@ def answer(dimensions, captain_position, badguy_position, distance):
     c1, c2 = captain_position
     b1, b2 = badguy_position
 
-    # x,y position of bad guy
+    # x,y position of bad guy, centering captain on origin
     y = b2 - c2
     x = b1 - c1
 
@@ -200,3 +200,5 @@ def inRange(point, distance):
     if x ** 2 + y ** 2 > distance ** 2:
         return False
     return x ** 2 + y ** 2 <= distance ** 2
+
+print reflectionsy([4,4],[2,2],20)
