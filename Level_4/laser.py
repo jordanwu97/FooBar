@@ -55,11 +55,9 @@ def reflectedTargets(dim, shooter, target, distance):
 				# if out of range, we will stop checking for this list of y's, since distance will only increase
 					break
 				else:
-					x = (x - shooter[0]) # (vector x,y,distance from shooter)
-					y = (y - shooter[1])
-					ux = round((x/iR), 15)
-					uy = round((y/iR), 15)
-					plist.append((ux, uy, x, y, iR))
+					ux = rounding((x - shooter[0]) / iR) # unit vector for each
+					uy = rounding((y - shooter[1]) / iR)
+					plist.append((ux, uy, iR, (x - shooter[0]), (y - shooter[1])))
 	return plist
 
 def reflectedShooter(dim, shooter, distance):
@@ -77,21 +75,20 @@ def inRange(shooter, target, distance):
 # store in map the vector with the shortest distance
 def findShortest(l,shooter):
 	vector_map = {} # map the unit vector with the vector of shortest distance
-	c = 0
 
 	for m in l:
-		v = m[0], m[1], c
-
-		if v not in vector_map:
-			vector_map[v] = m[2],m[3],m[4]
+		uv = m[0], m[1]
+		v = m[3], m[4]
+		if uv not in vector_map:
+			vector_map[uv] = m[2], v
 		else:
-			selected_vector = vector_map[v]
-			if ((selected_vector[0], selected_vector[1]), v): 
-				if vector_map[v] > m[2]: # if the distance stored in vector map is greater than the current vector we are comparing
-					vector_map[v] = m[2],m[3],m[4]
+			selected = vector_map[uv]
+			if not isSameDirection(v, selected[1]):
+				k = 1/0
+			if vector_map[uv] > m[2]: # if the distance stored in vector map is greater than the current vector we are comparing
+				vector_map[uv] = m[2], v
 			else:
-				c += 1
-				v = m[0], m[1], c
+				pass
 
 	return vector_map
 
@@ -137,6 +134,6 @@ def answer(dim, shooter, target, distance):
 	return len(target_map_filtered)
 
 def rounding(x):
-	return round(Decimal(x),13)
+	return round(Decimal(x),15)
 
 print answer([300, 275], [150, 150], [185, 100], 500)
