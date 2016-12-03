@@ -11,7 +11,7 @@ def reflected(dim, shooter, target, distance):
 
 	temp = target
 	cnt = 0
-	l = []
+	l = []								# list of positive points
 
 	while temp <= farthest_pos:			# reflect targets continuously until we get to farthest_pos
 		l.append(temp)
@@ -23,9 +23,9 @@ def reflected(dim, shooter, target, distance):
 
 
 	temp = target - delta_s
-	l2 = []
+	l2 = []								# list of negative points
 
-	while temp > farthest_neg:			# reflect targets continuously until we get to farthest_neg
+	while temp >= farthest_neg:			# reflect targets continuously until we get to farthest_neg
 		l2.append(temp)
 		if cnt % 2 == 0:
 			temp -= delta_s
@@ -55,20 +55,48 @@ def reflectedTargets(dim, shooter, target, distance):
 				# if out of range, we will stop checking for this list of y's, since distance will only increase
 					break
 				else:
-					plist.append((x,y,iR))
+					ux = rounding((x - shooter[0]) / iR) # unit vector for each
+					uy = rounding((y - shooter[1]) / iR)
+					plist.append((ux, uy, iR))
 	return plist
 
 def reflectedShooter(dim, shooter, distance):
 	slist = reflectedTargets(dim, shooter, shooter, distance)
 	return slist
 
+def inRange(shooter, target, distance):
+	d = (shooter[0] - target[0])**2 + (shooter[1] - target[1])**2
+	if d <= distance**2:
+		return math.sqrt(d)
+	else:
+		return False
+
+# find the shortest distance corresponding with each vector P[v], where v:Distance
+# store in map the vector with the shortest distance
+def findShortest(l,shooter):
+	vector_map = {} # map the unit vector with the vector of shortest distance
+
+	for m in l:
+		v = m[0], m[1]
+		if v not in vector_map:
+			vector_map[v] = m[2]
+		else:
+			if vector_map[v] > m[2]: # if the distance stored in vector map is greater than the current vector we are comparing
+				vector_map[v] = m[2]
+			else:
+				pass
+
+	return vector_map
+
 def answer(dim, shooter, target, distance):
 	tlist = reflectedTargets(dim, shooter, target, distance)
-	target_map = unitVectorize(tlist,shooter)
+	# print tlist
+	target_map = findShortest(tlist,shooter)
 	# print target_map
 
 	slist = reflectedShooter(dim, shooter, distance)
-	shooter_map = unitVectorize(slist,shooter)
+	# print slist
+	shooter_map = findShortest(slist,shooter)
 	# print shooter_map
 
 	target_map_filtered = {}
@@ -86,43 +114,7 @@ def answer(dim, shooter, target, distance):
 
 	return len(target_map_filtered)
 
-def inRange(shooter,target,distance):
-	d = (shooter[0] - target[0])**2 + (shooter[1] - target[1])**2
-	if d <= distance**2:
-		return math.sqrt(d)
-	else:
-		return False
-
-# unit vectorize each point:
-# store in map the vector with the shortest distance
-def unitVectorize(l,shooter):
-	nlist = [] # 
-	vector_map = {} # map the unit vector with the vector of shortest distance
- 	for n in l:
- 		ux = rounding((n[0]-shooter[0])/n[2])
- 		uy = rounding((n[1]-shooter[1])/n[2])
-		nlist.append((ux,uy,n[2])) # tuple of (x/d, y/d, d)
-	
-	# print l
-	# print nlist
-
-	for m in nlist:
-		v = m[0], m[1]
-		if v not in vector_map:
-			vector_map[v] = m[2]
-		else:
-			if vector_map[v] > m[2]: # if the distance stored in vector map is greater than the current vector we are comparing
-				vector_map[v] = m[2]
-			else:
-				pass
-
-	# print vector_map
-	return vector_map
-
 def rounding(x):
-	return round(Decimal(x),14)
+	return round(Decimal(x),5)
 
-print answer([3,3], [1,1], [2,2], 5)
-# print reflected( 5, 2 , 1, 12)
-
-
+print answer([300, 275], [150, 150], [185, 100], 500)
