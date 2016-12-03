@@ -55,9 +55,11 @@ def reflectedTargets(dim, shooter, target, distance):
 				# if out of range, we will stop checking for this list of y's, since distance will only increase
 					break
 				else:
-					ux = rounding((x - shooter[0]) / iR) # unit vector for each
-					uy = rounding((y - shooter[1]) / iR)
-					plist.append((ux, uy, iR))
+					x = (x - shooter[0]) # (vector x,y,distance from shooter)
+					y = (y - shooter[1])
+					ux = round((x/iR), 15)
+					uy = round((y/iR), 15)
+					plist.append((ux, uy, x, y, iR))
 	return plist
 
 def reflectedShooter(dim, shooter, distance):
@@ -75,18 +77,38 @@ def inRange(shooter, target, distance):
 # store in map the vector with the shortest distance
 def findShortest(l,shooter):
 	vector_map = {} # map the unit vector with the vector of shortest distance
+	c = 0
 
 	for m in l:
-		v = m[0], m[1]
+		v = m[0], m[1], c
+
 		if v not in vector_map:
-			vector_map[v] = m[2]
+			vector_map[v] = m[2],m[3],m[4]
 		else:
-			if vector_map[v] > m[2]: # if the distance stored in vector map is greater than the current vector we are comparing
-				vector_map[v] = m[2]
+			selected_vector = vector_map[v]
+			if ((selected_vector[0], selected_vector[1]), v): 
+				if vector_map[v] > m[2]: # if the distance stored in vector map is greater than the current vector we are comparing
+					vector_map[v] = m[2],m[3],m[4]
 			else:
-				pass
+				c += 1
+				v = m[0], m[1], c
 
 	return vector_map
+
+def isSameDirection(u, v):
+	sign = lambda a: (a>0) - (a<0)
+
+	ux, uy = u
+	vx, vy = v
+
+	z = ux*vy - uy*vx
+	if z == 0:
+		if sign(ux) == sign(vx) and sign(uy) == sign(vy):
+			return True
+		else:
+			return False
+	else:
+		return False
 
 def answer(dim, shooter, target, distance):
 	tlist = reflectedTargets(dim, shooter, target, distance)
@@ -115,6 +137,6 @@ def answer(dim, shooter, target, distance):
 	return len(target_map_filtered)
 
 def rounding(x):
-	return round(Decimal(x),5)
+	return round(Decimal(x),13)
 
 print answer([300, 275], [150, 150], [185, 100], 500)
