@@ -80,13 +80,13 @@ def findShortest(l,shooter):
 		uv = m[0], m[1]
 		v = m[3], m[4]
 		if uv not in vector_map:
-			vector_map[uv] = m[2], v
+			vector_map[uv] = m[2]
 		else:
 			selected = vector_map[uv]
 			if not isSameDirection(v, selected[1]):
 				k = 1/0
 			if vector_map[uv] > m[2]: # if the distance stored in vector map is greater than the current vector we are comparing
-				vector_map[uv] = m[2], v
+				vector_map[uv] = m[2]
 			else:
 				pass
 
@@ -111,12 +111,14 @@ def answer(dim, shooter, target, distance):
 	tlist = reflectedTargets(dim, shooter, target, distance)
 	# print tlist
 	target_map = findShortest(tlist,shooter)
-	# print target_map
+	print ""
+	print target_map
 
 	slist = reflectedShooter(dim, shooter, distance)
 	# print slist
 	shooter_map = findShortest(slist,shooter)
-	# print shooter_map
+	print ""
+	print shooter_map
 
 	target_map_filtered = {}
 
@@ -129,11 +131,12 @@ def answer(dim, shooter, target, distance):
 		else:
 			target_map_filtered[t] = target_map[t]
 	# print ""
-	# print target_map_filtered
+	print ""
+	print target_map_filtered
 
 	return len(target_map_filtered)
 
 def rounding(x):
 	return round(Decimal(x),15)
 
-print answer([300, 275], [150, 150], [185, 100], 500)
+print answer([3,2], [1, 1], [2, 1], 4)
