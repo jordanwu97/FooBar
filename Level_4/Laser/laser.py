@@ -78,7 +78,7 @@ def findVector(dim, shooter, target, distance):
 					else:
 						pass
 						selected = v_map[uv]
-						print selected
+						# print selected
 						# if not isSameDirection(v, selected[1]): # double checking assumption that if unit vectors are equal, then parallel
 							# return (1/0) # throw a zero division error if assumption is false
 						if selected[0] > iR: # if the distance stored in vector map is greater than the current vector we are comparing
@@ -90,7 +90,7 @@ def findVector(dim, shooter, target, distance):
 	# return plist
 
 def inRange(shooter, target, distance):
-	d2 = (shooter[0] - target[0])**2 + (shooter[1] - target[1])**2
+	d2 = (shooter[0] - target[0])**2 + (shooter[1] - target[1])**2 # pythagoras!
 	if d2 <= distance**2:
 		return math.sqrt(d2)
 	else:
@@ -103,7 +103,7 @@ def isSameDirection(u, v):
 	vx, vy = v
 
 	z = ux*vy - uy*vx # solve for k component of (u x v)
-	if z == 0 and (sign(ux) == sign(vx) and sign(uy) == sign(vy)):
+	if z == 0 and (sign(ux) == sign(vx) and sign(uy) == sign(vy)): # cross must be 0 AND signs of components must be the same
 		return True
 	else:
 		return False
