@@ -1,5 +1,12 @@
 import math
 from decimal import Decimal
+# import matplotlib.pyplot as plt
+
+# What doesn't work:
+# handling conflict resolution and hash_maping unit vectors
+
+# What to try:
+# Force corners to be off limit in original cap list
 
 def reflected(dim, shooter, target, distance):
 
@@ -21,7 +28,6 @@ def reflected(dim, shooter, target, distance):
 			temp += delta_s
 		cnt += 1
 
-
 	temp = target - delta_s
 	l2 = []								# list of negative points
 
@@ -35,7 +41,7 @@ def reflected(dim, shooter, target, distance):
 
 	return l,l2
 
-def reflectedTargets(dim, shooter, target, distance):
+def findVector(dim, shooter, target, distance):
 	dim_x, dim_y = dim
 	shooter_x, shooter_y = shooter
 	target_x, target_y = target
@@ -46,7 +52,9 @@ def reflectedTargets(dim, shooter, target, distance):
 	ylists = reflected(dim_y, shooter_y, target_y, distance)
 	# print ylists
 
-	plist = [] # store reflected points in plist
+	# plist = [] # store reflected points in plist
+	v_map = {}
+
 	for x in xlists:
 		for ylist in ylists:
 			for y in ylist:
@@ -55,42 +63,38 @@ def reflectedTargets(dim, shooter, target, distance):
 				# if out of range, we will stop checking for this list of y's, since distance will only increase
 					break
 				else:
+					vx = x - shooter[0]
+					vy = y - shooter[1]
 					ux = rounding((x - shooter[0]) / iR) # unit vector for each
 					uy = rounding((y - shooter[1]) / iR)
-					plist.append((ux, uy, iR, (x - shooter[0]), (y - shooter[1])))
-	return plist
+					uv = (ux,uy)
+					v = (vx,vy)
+					# plist.append((ux, uy, iR, vx, vy))
 
-def reflectedShooter(dim, shooter, distance):
-	slist = reflectedTargets(dim, shooter, shooter, distance)
-	return slist
+					# find the shortest distance corresponding with each vector v_map[uv], where uv:Distance
+					# store in map the vector with the shortest distance
+					if uv not in v_map:
+						v_map[uv] = iR, v
+					else:
+						pass
+						selected = v_map[uv]
+						print selected
+						# if not isSameDirection(v, selected[1]): # double checking assumption that if unit vectors are equal, then parallel
+							# return (1/0) # throw a zero division error if assumption is false
+						if selected[0] > iR: # if the distance stored in vector map is greater than the current vector we are comparing
+							print 'conflict'
+							vector_map[uv] = iR, v
+						else:
+							pass
+	return v_map
+	# return plist
 
 def inRange(shooter, target, distance):
-	d = (shooter[0] - target[0])**2 + (shooter[1] - target[1])**2
-	if d <= distance**2:
-		return math.sqrt(d)
+	d2 = (shooter[0] - target[0])**2 + (shooter[1] - target[1])**2
+	if d2 <= distance**2:
+		return math.sqrt(d2)
 	else:
 		return False
-
-# find the shortest distance corresponding with each vector P[v], where v:Distance
-# store in map the vector with the shortest distance
-def findShortest(l,shooter):
-	vector_map = {} # map the unit vector with the vector of shortest distance
-
-	for m in l:
-		uv = m[0], m[1]
-		v = m[3], m[4]
-		if uv not in vector_map:
-			vector_map[uv] = m[2]
-		else:
-			selected = vector_map[uv]
-			if not isSameDirection(v, selected[1]):
-				k = 1/0
-			if vector_map[uv] > m[2]: # if the distance stored in vector map is greater than the current vector we are comparing
-				vector_map[uv] = m[2]
-			else:
-				pass
-
-	return vector_map
 
 def isSameDirection(u, v):
 	sign = lambda a: (a>0) - (a<0)
@@ -98,45 +102,62 @@ def isSameDirection(u, v):
 	ux, uy = u
 	vx, vy = v
 
-	z = ux*vy - uy*vx
-	if z == 0:
-		if sign(ux) == sign(vx) and sign(uy) == sign(vy):
-			return True
-		else:
-			return False
+	z = ux*vy - uy*vx # solve for k component of (u x v)
+	if z == 0 and (sign(ux) == sign(vx) and sign(uy) == sign(vy)):
+		return True
 	else:
 		return False
 
-def answer(dim, shooter, target, distance):
-	tlist = reflectedTargets(dim, shooter, target, distance)
-	# print tlist
-	target_map = findShortest(tlist,shooter)
-	print ""
-	print target_map
+def restrictedUnitVectors(v,distance):
+	d = inRange((0,0),v,distance)
+	uv = (v[0]/d, v[1]/d)
 
-	slist = reflectedShooter(dim, shooter, distance)
-	# print slist
-	shooter_map = findShortest(slist,shooter)
-	print ""
-	print shooter_map
+	return uv, d
+
+def answer(dim, shooter, target, distance):
+
+	# dictionary of vectors for shooter and target
+	sx, sy = shooter
+	dimx, dimy = dim
+
+	target_map = findVector(dim, shooter, target, distance) 
+	shooter_map = findVector(dim, shooter, shooter, distance)
+
+	restricted_1 = dimx-sx, dimy-sy, 
+	restricted_2 = -sx,-sy
+	restricted_3 = dimx-sx, -sy
+	restricted_4 = -sx, dimy-sy
+
+	restricteds = [restricted_1,restricted_2,restricted_3,restricted_4]
+
+	u_restricteds = []
+
+	for n in restricteds:
+		k = restrictedUnitVectors(n, distance)
+		shooter_map[k[0]] = k[1], n
 
 	target_map_filtered = {}
 
 	for t in target_map:
 		if t in shooter_map: # if such vector is in shooter_map
 			if shooter_map[t] > target_map[t]: # if the distance in shooter map is greater than in target
+				print 'shooter target conflict'
 				target_map_filtered[t] = target_map[t] # means we will hit target before we hit shooter
 			else:
 				pass
 		else:
 			target_map_filtered[t] = target_map[t]
-	# print ""
-	print ""
-	print target_map_filtered
+	
+	# plt.scatter(shooter[0],shooter[1])
 
+	# for key, value in target_map_filtered.iteritems():
+	# 	n = value[1]
+		# plt.scatter(n[0]+shooter[0],n[1]+shooter[1])
+
+	# plt.show()
 	return len(target_map_filtered)
 
 def rounding(x):
-	return round(Decimal(x),15)
+	return round(Decimal(x),9)
 
-print answer([3,2], [1, 1], [2, 1], 4)
+print answer([300, 275], [150, 150], [185, 100], 500)
