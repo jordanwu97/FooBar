@@ -3,7 +3,7 @@ def answer(dimensions, captain_position, badguy_position, distance):
     c1, c2 = captain_position
     b1, b2 = badguy_position
 
-    # x,y position of bad guy, centering captain on origin
+    # x,y position of bad guy
     y = b2 - c2
     x = b1 - c1
 
@@ -115,10 +115,7 @@ def answer(dimensions, captain_position, badguy_position, distance):
         hyp = float((a ** 2 + b ** 2))
         hyp = float((distance ** 2) / hyp) ** (1 / 2.0)
         if hyp != 0:
-            if b!=0:
-                point = (a/b)
-            else:
-                point = (b/a)
+            point = (hyp*a,hyp*b)
             if point not in result:
                 result[point] = l
             else:
@@ -132,11 +129,8 @@ def answer(dimensions, captain_position, badguy_position, distance):
         hyp = float((a ** 2 + b ** 2))
         hyp = float(distance**2/hyp)**(1/2.0)
         if hyp != 0:
-            if b!=0:
-                point = (a/b)
-            else:
-                point = (b/a)
-            #point = (hyp*a,hyp*b)
+            # point = ((a/gcd(a,b), b/gcd(a,b)))
+            point = (hyp*a,hyp*b)
             if point in result:
                 if result[point] > l:
                     del result[point]
@@ -145,12 +139,16 @@ def answer(dimensions, captain_position, badguy_position, distance):
 
     # # print ry
     # # print rx
-    # print noshot
+    print noshot
     # print
     # print shots
-
+    print result
     return len(result)
 
+def gcd(a,b):
+    if a%b != 0:
+        return gcd(a, a%b)
+    return b
 
 def dist(point):
     x, y = point
@@ -201,4 +199,15 @@ def inRange(point, distance):
         return False
     return x ** 2 + y ** 2 <= distance ** 2
 
-print reflectionsy([4,4],[2,2],20)
+# def answer(dim, shooter, target, distance):
+#     a = answer1(dim, shooter, target, distance)
+#     b = answer2(dim, shooter, target, distance)
+#     if a > b:
+#         return a
+#     else:
+#         return b
+
+
+print answer([10, 5], [1, 1], [9, 1], 14)
+
+
