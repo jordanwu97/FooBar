@@ -76,8 +76,10 @@ def answer(h,w,d):
 	# 	printgrid(grids)
 	print len(mygrids)
 
-answer(2,3,4)
-
+# answer(2,3,4)
+gs = createGrids(2,2,2)
+for g in gs:
+	printgrid(g)
 
 # go into each combination of rows
 	# for each combination of rows, also need to evaluate combination of columns

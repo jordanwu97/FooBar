@@ -86,7 +86,7 @@ def expand_x(grids, match_g):
     d1 = {} # d1 will store previous row information, Key will be the row, value will be the number of grids that have the previous row
     combs_x = getProducts(len(grids[0][0]))
 
-    for grid in grids:
+    for grid in grids: # create initial d1
         if grid[1] not in d1:
             d1[grid[1]] = 1
         else:
@@ -108,7 +108,7 @@ def expand_x(grids, match_g):
     res = 0
     for row, count in d1.iteritems():
         res = res + count
-    print res
+
     return res
 
 
