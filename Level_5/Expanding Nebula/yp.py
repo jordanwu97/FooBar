@@ -53,8 +53,16 @@ def expand_y(grids, g): # expanding horizontally
     
     return curgrids
 
-def expand_x(grids):
-    pass
+def expand_x(grids, g):
+    # for this part will construct a dictionary of the number of combinations at each layer. We can ignore all previous layer information
+    # since they don't matter and won't be compared with anymore
+    d1 = {}
+    for grid in grids:
+        if grid[1] not in d1:
+            d1[grid[1]] = 1
+        else:
+            d1[grid[1]] = d1[grid[1]] + 1
+    print d1
 
 def initialize(g):
     g00 = g[0][0]
@@ -62,19 +70,36 @@ def initialize(g):
     dim_1 = itertools.product(range(2), repeat = 2) # use itertools to create matrix
     grids = tuple(itertools.product(dim_1, repeat = 2)) # matrices are just products of products of a a list of prossible numbers
     for grid in grids:
-        if minimize(grid) == g00:
+        if minimize(grid) == g00: # prune out initial matrices just to have those that simplifies to g00
             l.add(grid)
     return tuple(l)
+
+def colRowSwap(grid):
+	w,h = len(grid), len(grid[0])
+	ng = [[0 for x in range(w)] for y in range(h)]
+	for n in xrange(len(grid)):
+		for m in xrange(len(grid[0])):
+			ng[m][n] = grid[n][m]
+
+	return tuple(tuple(x)for x in ng) # tuplize both dimensions
 
 def answer(g):
     t1 = time()
     grids = initialize(g) 
     grids = expand_y(grids, g)
+
+    g2 = []
+    for g in grids:
+        g2.append(colRowSwap(g)) # swap columns and rows for convinence in constructing level grids later
+    g2 = tuple(g2)
+
+    expand_x(g2, g)
+
     t2 = time()
-    # printgrids(grids)
+    # printgrids(g2)
     print len(grids)
     print t2-t1
 
-c = ((0,),(1,),(1,),(1,),(1,),)
+c = ((0,),(1,),)
 
 answer(c)
