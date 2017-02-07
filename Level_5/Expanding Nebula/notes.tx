@@ -1,0 +1,2 @@
+when expanding along 1 dimension,
+4,6,8,12,16,24,32 : A[n] = (A[n-2])*2
