@@ -1,4 +1,5 @@
 import itertools
+from time import time
 
 def createGrids(w,h,d):
 	dim_1 = itertools.product(range(d), repeat = w) # use itertools to create matrix
@@ -37,10 +38,14 @@ def pruneGrids(grids, match):
     return count
 
 def answer(c):
+    t1 = time()
     g1s = createGrids(len(c[0])+1,len(c)+1,2)
     # print g1s
-    print pruneGrids(g1s, c)
+    lol = pruneGrids(g1s, c)
+    t2 = time()
+    print t2-t1
+    print lol
 
-c = ((0,),)
+c = ((0,),(1,),(1,),(1,),(1,),)
 
 answer(c)
