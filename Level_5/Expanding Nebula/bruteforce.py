@@ -46,6 +46,4 @@ def answer(c):
     print t2-t1
     print lol
 
-c = ((0,),(1,),(1,),(1,),(1,),)
-
 answer(c)
