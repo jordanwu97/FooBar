@@ -1,7 +1,24 @@
 import itertools
 from time import time
 
-ones = set()
+minimize = {
+    ((0, 0), (0, 0)) : 0,
+    ((0, 0), (0, 1)) : 1,
+    ((0, 0), (1, 0)) : 1,
+    ((0, 0), (1, 1)) : 0,
+    ((0, 1), (0, 0)) : 1,
+    ((0, 1), (0, 1)) : 0,
+    ((0, 1), (1, 0)) : 0,
+    ((0, 1), (1, 1)) : 0,
+    ((1, 0), (0, 0)) : 1,
+    ((1, 0), (0, 1)) : 0,
+    ((1, 0), (1, 0)) : 0,
+    ((1, 0), (1, 1)) : 0,
+    ((1, 1), (0, 0)) : 0,
+    ((1, 1), (0, 1)) : 0,
+    ((1, 1), (1, 0)) : 0,
+    ((1, 1), (1, 1)) : 0,
+}
 
 def convertToBin(g):
     ng = []
@@ -18,26 +35,15 @@ def convertToBin(g):
 
 def printgrid(n):
 	for i in n:
-		print i
-	print ""
+		print i,
+        print 
+	
 
 def printgrids(n):
     for i in n:
         printgrid(i)
 
-def minimize1(grid): # simplify a single 2x2 grid
-    if grid not in ones and len(ones) == 4:
-        return 0
 
-    if grid in ones:
-        return 1
-
-    if (grid[0][0] + grid[0][1] + grid[1][0] + grid[1][1]) == 1:
-        ones.add(grid)
-        return 1
-
-    else:
-        return 0
 
 def minimize2(grid): # simplify grid size of nx2
     sim = []
@@ -49,9 +55,17 @@ def minimize2(grid): # simplify grid size of nx2
 def getProducts(l): # get all the ways to arrange 0,1 in length l
     return tuple(itertools.product(range(2), repeat = l)) 
 
-def expand_y(grids, g): # expanding horizontally
-    combs_y = getProducts(2)
-    curgrids = grids # initial grid set
+def initialize(g):
+    g00 = g[0][0]
+    l = []
+    for grid, value in minimize.iteritems():
+        if value == g00:
+            l.append(grid)
+    return tuple(l)
+
+def expand_y(lastLayer,matchColumn): # expanding horizontally
+    combs_y = ((0,0),(0,0),(1,0),(1,1))
+    curgrids = initialize(matchColumn) # initial grid set
 
     for n in xrange(1,len(g)): # loop until we get desired horizontal possibilites for first column
 
@@ -73,7 +87,8 @@ def expand_y(grids, g): # expanding horizontally
     
     return curgrids
 
-def expand_x(grids, match_g):
+def expand_x(grids, match_g)
+
     # for this part will construct a dictionary of the number of combinations at each layer. We can ignore all previous layer information
     # since they don't matter and won't be compared with anymore
     # swap columns and rows for convinence in constructing level grids later
@@ -111,25 +126,8 @@ def expand_x(grids, match_g):
 
     return res
 
-
-def initialize(g):
-    g00 = g[0][0]
-    l = set()
-    dim_1 = itertools.product(range(2), repeat = 2) # use itertools to create matrix
-    grids = tuple(itertools.product(dim_1, repeat = 2)) # matrices are just products of products of a a list of prossible numbers
-    for grid in grids:
-        if minimize1(grid) == g00: # prune out initial matrices just to have those that simplifies to g00
-            l.add(grid)
-    return tuple(l)
-
 def colRowSwap(grid):
-	w,h = len(grid), len(grid[0])
-	ng = [[0 for x in range(w)] for y in range(h)]
-	for n in xrange(len(grid)):
-		for m in xrange(len(grid[0])):
-			ng[m][n] = grid[n][m]
-
-	return tuple(tuple(x)for x in ng) # tuplize both dimensions
+    return tuple(zip(*grid))
 
 def answer(g):
     g = convertToBin(g)
@@ -141,6 +139,3 @@ def answer(g):
     t2 = time()
     print t2-t1
     return res
-
-b = [[True, True, False, True, False, True, False, True, True, False], [True, True, False, False, False, False, True, True, True, False], [True, True, False, False, False, False, False, False, False, True], [False, True, False, False, False, False, True, True, False, False]]
-answer(b)
