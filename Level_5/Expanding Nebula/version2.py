@@ -35,8 +35,8 @@ def convertToBin(g):
 
 def printgrid(n):
 	for i in n:
-		print i,
-        print
+		print i
+	print ""
 
 def getProducts(l): # get all the ways to arrange 0,1 in length l
     return tuple(itertools.product(range(2), repeat = l)) 
@@ -50,7 +50,7 @@ def initialize(g):
     return tuple(l)
 
 def expandY(matchColumn): # expanding horizontally
-    combs_y = ((0,0),(0,0),(1,0),(1,1))
+    combs_y = ((0,0),(0,1),(1,0),(1,1))
     curgrids = initialize(matchColumn) # initial grid set
 
     for n in xrange(1,len(matchColumn)): # loop until we get desired possibilites for this column
@@ -78,15 +78,13 @@ def expandX(match_g):
     
     d1 = {} # d1 will store previous row information, Key will be the row, value will be the number of grids that have the previous row
     grids = doForAll(expandY(rotated_match_g[0]), colRowSwap) # once we get the possible columns back, we'll rotate it so its easier to match it row by row
-    print grids
+
 
     for grid in grids: # create initial d1
         if grid[1] not in d1:
             d1[grid[1]] = 1
         else:
             d1[grid[1]] = d1[grid[1]] + 1
-    print ""
-    print d1
 
     for n in xrange(1,len(rotated_match_g)):
         d2 = {} # d2 will store new layer information. will replace d1
@@ -115,9 +113,12 @@ def doForAll(items, function):
     return tuple([function(x) for x in items])
 
 def answer(g):
-    return expandX(g)
+	t1 = time()
+	n = expandX(g)
+	t2 = time()
+	print t2-t1
+	return n
 
-g = [[True, False, True], [False, True, False]]
-g = convertToBin(g)
-
-print answer(g)
+if __name__ == "__main__":
+	g = [[True, False, True, False, False, True, True, True], [True, False, True, False, False, False, True, False], [True, True, True, False, False, False, True, False], [True, False, True, False, False, False, True, False], [True, False, True, False, False, True, True, True]]
+	print answer(g)

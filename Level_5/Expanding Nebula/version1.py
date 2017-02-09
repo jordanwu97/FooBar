@@ -81,8 +81,8 @@ def expand_x(grids, match_g):
     for a in grids:
         g2.append(colRowSwap(a))
     grids = tuple(g2)
-    print grids
     match_g = colRowSwap(match_g)
+
     
     d1 = {} # d1 will store previous row information, Key will be the row, value will be the number of grids that have the previous row
     combs_x = getProducts(len(grids[0][0]))
@@ -92,7 +92,7 @@ def expand_x(grids, match_g):
             d1[grid[1]] = 1
         else:
             d1[grid[1]] = d1[grid[1]] + 1
-    print d1
+
 
     for n in xrange(1,len(match_g)):
         d2 = {} # d2 will store new layer information. will replace d1
@@ -105,7 +105,6 @@ def expand_x(grids, match_g):
                         d2[comb] = d2[comb] + count
                     else:
                         d2[comb] = count
-        print d2
         d1 = d2 # after each layer, replace d1 with d2, all previous combinations will be intrinsic to d2
     
     res = 0
@@ -141,7 +140,3 @@ def answer(g):
 
     res = expand_x(grids, g)
     return res
-g = [[True, False, True], [False, True, False]]
-g = convertToBin(g)
-
-print answer(g)
