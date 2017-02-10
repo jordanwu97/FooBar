@@ -4,8 +4,9 @@ from random import randint
 from time import time
 
 def createRandomGrid():
-    h = randint(6, 9)
-    w = randint(45, 50)
+    h = randint(9,10)
+    w = randint(40, 50)
+
     g = []
     for y in xrange(h):
         row = []
@@ -13,10 +14,15 @@ def createRandomGrid():
             row.append(randint(0,1))
         g.append(row)
     
-    return g
+    return g,w,h
 
+x = []
+y = []
 for n in xrange(10):
-    g = createRandomGrid()
+    g,w,h = createRandomGrid()
     t1 = time()
+
     n = v2answer(g)
+
     print time() - t1
+
